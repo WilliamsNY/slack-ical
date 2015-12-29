@@ -4,7 +4,7 @@ Small python script to push ical things to slack
 
 ## Usage
 
-```
+```bash
 export SLACK_WEBHOOKURL=https://hooks.slack.com/services/[YOUR]/[URL]/[HERE]
 export SLACK_BOTNAME='Slack Bot'
 export SLACK_BOTEMOJI=':medal:'
