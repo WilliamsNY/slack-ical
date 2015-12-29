@@ -52,7 +52,8 @@ def getFeed(calFeed):
 
     todayDates=[]
     tomorrowDates=[]
-    thisWeekDates=[]
+    overdueDates=[]
+    upcomingDates=[]
 
     cal = Calendar.from_ical(caldata)
     for event in cal.walk('VEVENT'):
@@ -62,28 +63,38 @@ def getFeed(calFeed):
             todayDates.append({'Line': message, 'Date': date})
         elif date == datetime.today().date() + timedelta(days=1):
             tomorrowDates.append({'Line': message, 'Date': date})
+        elif date < datetime.today().date():
+            overdueDates.append({'Line': message, 'Date': date})
         elif date <= datetime.today().date() + timedelta(days=7):
-            thisWeekDates.append({'Line': message, 'Date': date})
-    return [ todayDates, tomorrowDates, thisWeekDates ]
+            upcomingDates.append({'Line': message, 'Date': date})
+    return [ todayDates, tomorrowDates, overdueDates, upcomingDates ]
 
-def getSlackMessage (todayDates, tomorrowDates, thisWeekDates):
-    message="*Today* (" + datetime.today().strftime("%A") + "):\n"
+def getSlackMessage (todayDates, tomorrowDates, overdueDates, upcomingDates):
+    message="*Today* _(" + datetime.today().strftime("%A %B %-d, %Y") + ")_:\n"
     if len(todayDates) > 0:
         for line in todayDates:
             message = message + "    " + line['Line']  + "\n"
     else:
         message = message + "    " + "_-none-_\n"
 
-    message = message + "\n*Tomorrow:*\n"
+    tomorrow=datetime.today().date() + timedelta(days=1)
+    message = message + "\n*Tomorrow* _(" + tomorrow.strftime("%A %B %-d, %Y") + ")_:\n"
     if len(tomorrowDates) > 0:
         for line in tomorrowDates:
             message = message + "    " + line['Line'] + "\n"
     else:
         message = message + "    " + "_-none-_\n"
 
-    message = message + "\n*This Week:*\n"
-    if len(thisWeekDates) > 0:
-        for line in thisWeekDates:
+    message = message + "\n*Upcoming:*\n"
+    if len(upcomingDates) > 0:
+        for line in upcomingDates:
+            message = message + "    " + line['Line'] + " _(" + line['Date'].strftime("%A %B %-d, %Y") + ")_\n"
+    else:
+        message = message + "    " + "_-none-_\n"
+
+    message = message + "\n*Overdue:*\n"
+    if len(overdueDates) > 0:
+        for line in overdueDates:
             message = message + "    " + line['Line'] + " _(" + line['Date'].strftime("%A %B %-d, %Y") + ")_\n"
     else:
         message = message + "    " + "_-none-_\n"
@@ -93,8 +104,8 @@ def getSlackMessage (todayDates, tomorrowDates, thisWeekDates):
 ### Begin main
 
 for feed in channelFeeds:
-    todayDates, tomorrowDates, thisWeekDates = getFeed(feed['calFeed'])
-    message = getSlackMessage(todayDates, tomorrowDates, thisWeekDates)
+    todayDates, tomorrowDates, overdueDates, upcomingDates = getFeed(feed['calFeed'])
+    message = getSlackMessage(todayDates, tomorrowDates, overdueDates, upcomingDates)
 
     slackMessage = {
         'username':   feed['botName'],
