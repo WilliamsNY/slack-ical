@@ -70,34 +70,26 @@ def getFeed(calFeed):
     return [ todayDates, tomorrowDates, overdueDates, upcomingDates ]
 
 def getSlackMessage (todayDates, tomorrowDates, overdueDates, upcomingDates):
-    message="*Today* _(" + datetime.today().strftime("%A %B %-d, %Y") + ")_:\n"
     if len(todayDates) > 0:
+        message="*Today* _(" + datetime.today().strftime("%A %B %-d, %Y") + ")_:\n"
         for line in todayDates:
-            message = message + "    " + line['Line']  + "\n"
-    else:
-        message = message + "    " + "_-none-_\n"
+            message = message + ">" + line['Line']  + "\n"
 
-    tomorrow=datetime.today().date() + timedelta(days=1)
-    message = message + "\n*Tomorrow* _(" + tomorrow.strftime("%A %B %-d, %Y") + ")_:\n"
     if len(tomorrowDates) > 0:
+        tomorrow=datetime.today().date() + timedelta(days=1)
+        message = message + "\n*Tomorrow* _(" + tomorrow.strftime("%A %B %-d, %Y") + ")_:\n"
         for line in tomorrowDates:
-            message = message + "    " + line['Line'] + "\n"
-    else:
-        message = message + "    " + "_-none-_\n"
+            message = message + ">" + line['Line'] + "\n"
 
-    message = message + "\n*Upcoming:*\n"
     if len(upcomingDates) > 0:
+        message = message + "\n*Upcoming:*\n"
         for line in upcomingDates:
-            message = message + "    " + line['Line'] + " _(" + line['Date'].strftime("%A %B %-d, %Y") + ")_\n"
-    else:
-        message = message + "    " + "_-none-_\n"
+            message = message + ">" + line['Line'] + " _(" + line['Date'].strftime("%A %B %-d, %Y") + ")_\n"
 
-    message = message + "\n*Overdue:*\n"
     if len(overdueDates) > 0:
+        message = message + "\n*Overdue:*\n"
         for line in overdueDates:
-            message = message + "    " + line['Line'] + " _(" + line['Date'].strftime("%A %B %-d, %Y") + ")_\n"
-    else:
-        message = message + "    " + "_-none-_\n"
+            message = message + ">" + line['Line'] + " _(" + line['Date'].strftime("%A %B %-d, %Y") + ")_\n"
 
     return message
 
