@@ -70,13 +70,15 @@ def getFeed(calFeed):
     return [ todayDates, tomorrowDates, overdueDates, upcomingDates ]
 
 def getSlackMessage (todayDates, tomorrowDates, overdueDates, upcomingDates):
+    message=""
+
     if len(todayDates) > 0:
-        message="*Today* _(" + datetime.today().strftime("%A %B %-d, %Y") + ")_:\n"
+        message = message + "*Today* _(" + datetime.today().strftime("%A %B %-d, %Y") + ")_:\n"
         for line in todayDates:
             message = message + ">" + line['Line']  + "\n"
 
     if len(tomorrowDates) > 0:
-        tomorrow=datetime.today().date() + timedelta(days=1)
+        tomorrow = datetime.today().date() + timedelta(days=1)
         message = message + "\n*Tomorrow* _(" + tomorrow.strftime("%A %B %-d, %Y") + ")_:\n"
         for line in tomorrowDates:
             message = message + ">" + line['Line'] + "\n"
