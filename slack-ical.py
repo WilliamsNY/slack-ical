@@ -79,17 +79,17 @@ def getSlackMessage (todayDates, tomorrowDates, overdueDates, upcomingDates):
 
     if len(tomorrowDates) > 0:
         tomorrow = datetime.today().date() + timedelta(days=1)
-        message = message + "\n*Tomorrow* _(" + tomorrow.strftime("%A %B %-d, %Y") + ")_:\n"
+        message = message + "*Tomorrow* _(" + tomorrow.strftime("%A %B %-d, %Y") + ")_:\n"
         for line in tomorrowDates:
             message = message + ">" + line['Line'] + "\n"
 
     if len(upcomingDates) > 0:
-        message = message + "\n*Upcoming:*\n"
+        message = message + "*Upcoming:*\n"
         for line in upcomingDates:
             message = message + ">" + line['Line'] + " _(" + line['Date'].strftime("%A %B %-d, %Y") + ")_\n"
 
     if len(overdueDates) > 0:
-        message = message + "\n*Overdue:*\n"
+        message = message + "*Overdue:*\n"
         for line in overdueDates:
             message = message + ">" + line['Line'] + " _(" + line['Date'].strftime("%A %B %-d, %Y") + ")_\n"
 
